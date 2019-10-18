@@ -1,6 +1,18 @@
 /*Google fonts*/
-@import url('https://fonts.googleapis.com/css?family=Raleway');
+@import url('https://fonts.googleapis.com/css?family=Montserrat');
 
+
+form input[type=text]::placeholder {
+  font-family: "Montserrat";
+  color: #666;
+}
+
+form h2 {
+  font-family: "Montserrat";
+  color: rgba(70, 67, 72, 0.714);
+}
+
+/*
 form {
   max-width: 30em;
   margin: 4em auto;
@@ -63,3 +75,5 @@ form .form-control {
 form .form-control:focus {
   box-shadow: 0;
 }
+
+*/
