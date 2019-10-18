@@ -2,6 +2,11 @@
 @import url('https://fonts.googleapis.com/css?family=Montserrat');
 
 
+#card-img-top {
+  width:100px
+}
+
+
 form input[type=text]::placeholder {
   font-family: "Montserrat";
   color: #666;
