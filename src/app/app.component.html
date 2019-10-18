@@ -2,7 +2,11 @@
   <form #todoForm="ngForm" (ngSubmit)="todoSubmit(todoForm.value)">
 
     <div class="form-group">
-      <h1 class="text-center text-primary">Mini NetFlix</h1>
+      <a href="/">
+        <h1 class="text-center text-primary">Mini NetFlix</h1>
+      </a>
+
+      <i (click)="searchMovies('#showFavs#')" class="material-icons">favorite</i>
 
       <div class="input-group-prepend">
 
@@ -20,18 +24,13 @@
 
                 <h4 class="card-title">{{todo.title}}</h4>
                 <a class="btn btn-flat red-text p-1 my-1 mr-0 mml-1 collapsed" data-toggle="collapse"
-                data-target="#collapse" aria-expanded="false" aria-controls="collapseContent">
-                <img class="card-img-top" src='{{todo.posterPath}}' alt="Card image cap" height="500px" />
-                <p class="card-text">Year of Production : {{todo.releaseDate | date:'longDate'}}</p>
-              Click on Image to ReadMore</a>
-                <i (click)="addtoFav(todo)" class="material-icons">favorite</i>
+                  data-target="#collapse" aria-expanded="false" aria-controls="collapseContent">
+                  <img class="card-img-top" src='{{todo.posterPath}}' alt="Card image cap" height="500px" />
+                  <p class="card-text">Year of Production : {{todo.releaseDate | date:'longDate'}}</p>
+                  Click on Image to ReadMore
+                </a>
 
-                <div id="collapse" class="collapse">
-                  Lorem ipsum dolor sit amet, consectetur adipisicing elit,
-                  sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
-                  Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris
-                  nisi ut aliquip ex ea commodo consequat.
-                </div>
+                <i (click)="addTodo(todo)" class="material-icons">favorite_border</i>
 
 
               </div>
@@ -39,45 +38,6 @@
           </div>
         </div>
       </div>
-
-
-
-      <!-- <div class="card-deck" *ngFor="let todo of todoArray" style="width:250px">
-
-        <mdb-card>
-            <div class="view overlay waves-light" mdbWavesEffect>
-          <img class="card-img-top" src='{{todo.posterPath}}' alt="Card image cap" />
-
-          <div class="card-body">
-
-            <h4 class="card-title"><a>{{todo.title}}</a></h4>
-            <p class="card-text">ReleaseDate: {{todo.releaseDate}}</p>
-            <a class="btn btn-flat red-text p-1 my-1 mr-0 mml-1 collapsed" data-toggle="collapse"
-              href="#collapseContent" aria-expanded="false" aria-controls="collapseContent">READ MORE</a>
-            <i (click)="addtoFav(todo)" class="material-icons">favorite</i>
-
-          </div>
-        </mdb-card>
-      </div> -->
-
-
-      <!-- <div class="data">
-
-        <ul class="list-inline">
-
-          <li *ngFor="let todo of todoArray" class="list-inline-item">
-
-            <img src='https://image.tmdb.org/t/p/w500{{todo.posterPath}}' width=200px />
-            <h1>{{todo.title}}</h1>
-            <h5>ReleaseDate: {{todo.releaseDate}}</h5>
-            <h5>Vote Average: {{todo.voteAverage}}</h5>
-            <i (click)="deleteItem(todo)" class="material-icons">favorite</i>
-
-
-          </li>
-        </ul>
-
-      </div> -->
 
     </div>
 
