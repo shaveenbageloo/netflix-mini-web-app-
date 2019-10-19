@@ -6,13 +6,12 @@ import { AppComponent } from './app.component';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { CookieService } from 'angular2-cookie/services/cookies.service';
 import { FlexLayoutModule } from '@angular/flex-layout';
-// import { CardComponent } from './card.component';
+
 
 
 @NgModule({
   declarations: [
     AppComponent
-   //  CardComponent
   ],
   imports: [
     BrowserModule,

@@ -1,3 +1,6 @@
+
+
+
 <div class="container">
   <form #todoForm="ngForm" (ngSubmit)="todoSubmit(todoForm.value)">
 
@@ -18,20 +21,19 @@
 
       <div class="container">
         <div class="row">
+
+
+
+
           <div class="col-4" *ngFor="let todo of todoArray">
-            <div class="card h-100">
+
+            <div class="card h-100" class="view rgba-white-slight waves-light" mdbWavesEffect>
               <div class="card-block">
 
                 <h4 class="card-title">{{todo.title}}</h4>
-                <a class="btn btn-flat red-text p-1 my-1 mr-0 mml-1 collapsed" data-toggle="collapse"
-                  data-target="#collapse" aria-expanded="false" aria-controls="collapseContent">
-                  <img class="card-img-top" src='{{todo.posterPath}}' alt="Card image cap" height="500px" />
-                  <p class="card-text">Year of Production : {{todo.releaseDate | date:'longDate'}}</p>
-                  Click on Image to ReadMore
-                </a>
-
+                <img class="card-img-top" src='{{todo.posterPath}}' alt="Card image cap" />
+                <p class="card-text">Year of Production : {{todo.releaseDate | date:'longDate'}}</p>
                 <i (click)="addTodo(todo)" class="material-icons">favorite_border</i>
-
 
               </div>
             </div>

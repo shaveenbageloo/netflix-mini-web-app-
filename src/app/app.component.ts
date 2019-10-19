@@ -2,14 +2,15 @@ import { Component } from '@angular/core';
 import axios from 'axios';
 import { Movies } from '../model/movies';
 import { r3JitTypeSourceSpan } from '@angular/compiler';
-// import { CookieService } from 'angular2-cookie/core';
-
 
 @Component({
   selector: 'app-root',
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.css'],
 })
+
+
+
 
 
 export class AppComponent {
@@ -147,4 +148,14 @@ export class AppComponent {
       this.todoArray.push(value.todo);
     }
   }
+
+
+  showHide(todo) {
+    const jsonObject = JSON.parse(JSON.stringify(todo));
+    console.log('Card ID ' + jsonObject);
+
+  }
+
+
+
 }
