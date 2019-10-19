@@ -1,7 +1,7 @@
 import { Component } from '@angular/core';
 import axios from 'axios';
 import { Movies } from '../model/movies';
-import { CookieService } from 'angular2-cookie/core';
+// import { CookieService } from 'angular2-cookie/core';
 
 
 @Component({
@@ -40,10 +40,11 @@ export class AppComponent {
 
 
 
-  constructor(private _cookieService: CookieService) { }
+  // constructor(private _cookieService: CookieService) { }
 
   ngOnInit() {
-    this._cookieService.put("Set-Cookie", "HttpOnly;Secure;SameSite=Strict");
+    
+    //this._cookieService.put("Set-Cookie", "HttpOnly;Secure;SameSite=Strict");
 
 
 
