@@ -1,6 +1,7 @@
 import { Component } from '@angular/core';
 import axios from 'axios';
 import { Movies } from '../model/movies';
+import { r3JitTypeSourceSpan } from '@angular/compiler';
 // import { CookieService } from 'angular2-cookie/core';
 
 
@@ -13,10 +14,8 @@ import { Movies } from '../model/movies';
 
 export class AppComponent {
 
-  images = [];
-
   title = 'netflix-mini-web-app';
-
+  images = [];
   todoArray = [];
   favArray = [];
   essArray = [];
@@ -28,8 +27,7 @@ export class AppComponent {
     if (inPath) {
       if (inPath.indexOf('https://image.tmdb.org/t/p/w500') > 0) {
         posterPath = inPath;
-      }
-      else {
+      } else {
         posterPath = 'https://image.tmdb.org/t/p/w500' + inPath;
       }
     } else {
@@ -42,8 +40,8 @@ export class AppComponent {
 
   // constructor(private _cookieService: CookieService) { }
 
-  ngOnInit() {
-    
+  ngOnInit(): void {
+
     //this._cookieService.put("Set-Cookie", "HttpOnly;Secure;SameSite=Strict");
 
 
@@ -61,22 +59,17 @@ export class AppComponent {
 
       const jsonObject = JSON.parse(JSON.stringify(response.data.results));
 
-      jsonObject.forEach(element => {
+      jsonObject.forEach(e => {
 
-        const movieObject = new Movies(element.title, element.release_date, element.vote_average, this.getPostPath(element.poster_path));
+        const movieObject = new Movies(e.id, e.title, e.release_date, e.vote_average, this.getPostPath(e.poster_path));
         this.todoArray.push(movieObject);
 
       });
 
-    }).catch(e => {
-      console.log('Error has occured ' + e);
+    }).catch(err => {
+      console.log('Error has occured ' + err);
     });
   }
-
-
-
-
-
 
   searchMovies(searchBar) {
 
@@ -86,12 +79,11 @@ export class AppComponent {
       console.log('Searching on your favs for now');
 
       const checkSessionStore = (sessionStorage.getItem('userFavourites'));
-      const JSONSS = JSON.parse(JSON.stringify( checkSessionStore));
+      const jsonSSObject = JSON.parse('[' + (checkSessionStore) + ']');
 
-      JSONSS.forEach(element => {
+      jsonSSObject.forEach(e => {
 
-        const e = JSON.parse(element);
-        const movieObject = new Movies(e.title, e.releaseDate, e.voteAverage, e.posterPath);
+        const movieObject = new Movies(e.id, e.title, e.releaseDate, e.voteAverage, e.posterPath);
         this.todoArray.push(movieObject);
 
       });
@@ -110,11 +102,8 @@ export class AppComponent {
 
         const jsonObject = JSON.parse(JSON.stringify(response.data.results));
         jsonObject.forEach(element => {
-
-          const movieObject = new Movies(element.title, element.release_date, element.vote_average, this.getPostPath(element.poster_path));
+          const movieObject = new Movies(element.id.toString(), element.title, element.release_date, element.vote_average, this.getPostPath(element.poster_path));
           this.todoArray.push(movieObject);
-
-
         });
 
       }).catch(e => {
@@ -126,10 +115,24 @@ export class AppComponent {
   }
 
   addTodo(value) {
+    let duplicate = false;
     const valueToStore = (JSON.stringify(value));
-    this.favArray.push(valueToStore);
-    sessionStorage.setItem('userFavourites', valueToStore);
-  };
+    const valueToStoreJSONObject = JSON.parse(valueToStore);
+
+    this.favArray.forEach(e => {
+
+      const eObject = JSON.parse(e);
+      if (eObject.id.toString() === valueToStoreJSONObject.id.toString()) {
+        duplicate = true;
+      }
+
+    });
+
+    if (!duplicate) {
+      this.favArray.push(valueToStore);
+      sessionStorage.setItem('userFavourites', this.favArray.toString());
+    }
+  }
 
   deleteToDo(todo) {
     for (let i = 0; i <= this.todoArray.length; i++) {
