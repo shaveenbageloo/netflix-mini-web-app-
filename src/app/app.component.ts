@@ -2,6 +2,7 @@ import { Component } from '@angular/core';
 import axios from 'axios';
 import { Movies } from '../model/movies';
 import { r3JitTypeSourceSpan } from '@angular/compiler';
+import { Genre } from '../model/genre';
 
 @Component({
   selector: 'app-root',
@@ -20,6 +21,7 @@ export class AppComponent {
   todoArray = [];
   favArray = [];
   essArray = [];
+  genreArray = [];
 
 
   getPostPath(inPath) {
@@ -43,33 +45,100 @@ export class AppComponent {
 
   ngOnInit(): void {
 
-    //this._cookieService.put("Set-Cookie", "HttpOnly;Secure;SameSite=Strict");
+
+
+        //now get movies
+        axios.get('https://api.themoviedb.org/3/genre/movie/list', {
+          params: {
+            api_key: '7d46a1e2eaad722e50de334a6895d840',
+            language: 'en-US'
+          }
+        }).then(response => {
+
+          const jsonObject = JSON.parse(JSON.stringify(response.data.genres));
+          jsonObject.forEach(e => {
+            
+            const genreObject = new Genre(e.id, e.name);
+            this.genreArray.push(genreObject);
+            
+          });
+
+        }).catch(err => {
+          console.log('Error has occured ' + err);
+        });
 
 
 
-    axios.get('https://api.themoviedb.org/3/discover/movie', {
-      params: {
-        api_key: '7d46a1e2eaad722e50de334a6895d840',
-        language: 'en-US',
-        sort_by: 'popularity.desc',
-        page: '1',
-        include_adult: 'false',
-        include_video: 'false'
-      }
-    }).then(response => {
 
-      const jsonObject = JSON.parse(JSON.stringify(response.data.results));
 
-      jsonObject.forEach(e => {
+        //now get movies
+        axios.get('https://api.themoviedb.org/3/discover/movie', {
+          params: {
+            api_key: '7d46a1e2eaad722e50de334a6895d840',
+            language: 'en-US',
+            sort_by: 'popularity.desc',
+            page: '1',
+            include_adult: 'false',
+            include_video: 'false'
+          }
+        }).then(response => {
 
-        const movieObject = new Movies(e.id, e.title, e.release_date, e.vote_average, this.getPostPath(e.poster_path));
-        this.todoArray.push(movieObject);
+          const jsonObject = JSON.parse(JSON.stringify(response.data.results));
+          jsonObject.forEach(e => {
+            const movieObject = new Movies(e.id, e.title, e.release_date, e.vote_average,
+              this.getPostPath(e.poster_path), false, e.original_language, e.vote_count, e.genre_ids, this.genreArray, false);
+            this.todoArray.push(movieObject);
+          });
 
-      });
+        }).catch(err => {
+          console.log('Error has occured ' + err);
+        });
 
-    }).catch(err => {
-      console.log('Error has occured ' + err);
-    });
+
+
+
+
+
+    //now get genres:
+    // axios.get('https://api.themoviedb.org/3/genre/movie/list', {
+    //   params: {
+    //     api_key: '7d46a1e2eaad722e50de334a6895d840',
+    //     language: 'en-US'
+    //   }
+    // }).then(response => {
+    //   const jsonObject = JSON.parse(JSON.stringify(response.data.results));
+    //   jsonObject.forEach(e => {
+    //     const genreObject = new Genre(e.id, e.name);
+    //     this.genreArray.push(genreObject);
+    //     //}).then(response => {
+
+    //     //now get movies
+    //     axios.get('https://api.themoviedb.org/3/discover/movie', {
+    //       params: {
+    //         api_key: '7d46a1e2eaad722e50de334a6895d840',
+    //         language: 'en-US',
+    //         sort_by: 'popularity.desc',
+    //         page: '1',
+    //         include_adult: 'false',
+    //         include_video: 'false'
+    //       }
+    //     }).then(response => {
+
+    //       const jsonObject = JSON.parse(JSON.stringify(response.data.results));
+    //       jsonObject.forEach(e => {
+    //         const movieObject = new Movies(e.id, e.title, e.release_date, e.vote_average,
+    //           this.getPostPath(e.poster_path), false, e.original_language, e.vote_count, e.genre_ids, this.genreArray);
+    //         this.todoArray.push(movieObject);
+    //       });
+
+    //     }).catch(err => {
+    //       console.log('Error has occured ' + err);
+    //     });
+    //   });
+    // }).catch(err => {
+    //   console.log('Error has occured ' + err);
+    // });
+
   }
 
   searchMovies(searchBar) {
@@ -84,7 +153,8 @@ export class AppComponent {
 
       jsonSSObject.forEach(e => {
 
-        const movieObject = new Movies(e.id, e.title, e.releaseDate, e.voteAverage, e.posterPath);
+        const movieObject = new Movies(e.id, e.title, e.releaseDate, e.voteAverage, e.posterPath,
+          e.showHide, e.original_language, e.vote_count, e.genre_ids, this.genreArray, true);
         this.todoArray.push(movieObject);
 
       });
@@ -102,8 +172,9 @@ export class AppComponent {
       }).then(response => {
 
         const jsonObject = JSON.parse(JSON.stringify(response.data.results));
-        jsonObject.forEach(element => {
-          const movieObject = new Movies(element.id.toString(), element.title, element.release_date, element.vote_average, this.getPostPath(element.poster_path));
+        jsonObject.forEach(e => {
+          const movieObject = new Movies(e.id.toString(), e.title, e.release_date,
+            e.vote_average, this.getPostPath(e.poster_path), false, e.original_language, e.vote_count, e.genre_ids, this.genreArray, false);
           this.todoArray.push(movieObject);
         });
 
@@ -151,8 +222,16 @@ export class AppComponent {
 
 
   showHide(todo) {
-    const jsonObject = JSON.parse(JSON.stringify(todo));
-    console.log('Card ID ' + jsonObject);
+
+
+    if (todo.showHide === true) {
+      todo.showHide = false;
+    } else {
+      todo.showHide = true;
+    }
+
+
+
 
   }
 
