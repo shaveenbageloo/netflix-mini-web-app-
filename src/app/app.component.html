@@ -6,6 +6,7 @@
         <h1 class="text-center text-primary">Mini NetFlix</h1>
       </a>
 
+      
       <i (click)="searchMovies('#showFavs#')" class="material-icons">favorite</i>
 
       <div class="input-group-prepend">
@@ -34,7 +35,7 @@
                 <div [hidden]="todo.showingFavs">
 
                   <i (click)="addTodo(todo)" class="material-icons">favorite_border</i>
-                  <button (click)="showHide(todo)">Read More...</button>
+                  <button (click)="showHide(todo)">More...</button>
 
                   <div [hidden]="!todo.showHide">
                     <p>Rated: {{todo.voteAverage}}</p>

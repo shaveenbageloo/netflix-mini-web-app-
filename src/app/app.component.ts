@@ -3,6 +3,7 @@ import axios from 'axios';
 import { Movies } from '../model/movies';
 import { r3JitTypeSourceSpan } from '@angular/compiler';
 import { Genre } from '../model/genre';
+import { ToastrService } from 'ngx-toastr';
 
 @Component({
   selector: 'app-root',
@@ -23,6 +24,7 @@ export class AppComponent {
   essArray = [];
   genreArray = [];
 
+  constructor(private toastr: ToastrService) { }
 
   getPostPath(inPath) {
     let posterPath = '';
@@ -47,97 +49,52 @@ export class AppComponent {
 
 
 
-        //now get movies
-        axios.get('https://api.themoviedb.org/3/genre/movie/list', {
-          params: {
-            api_key: '7d46a1e2eaad722e50de334a6895d840',
-            language: 'en-US'
-          }
-        }).then(response => {
+    //now get movies
+    axios.get('https://api.themoviedb.org/3/genre/movie/list', {
+      params: {
+        api_key: '7d46a1e2eaad722e50de334a6895d840',
+        language: 'en-US'
+      }
+    }).then(response => {
 
-          const jsonObject = JSON.parse(JSON.stringify(response.data.genres));
-          jsonObject.forEach(e => {
-            
-            const genreObject = new Genre(e.id, e.name);
-            this.genreArray.push(genreObject);
-            
-          });
+      const jsonObject = JSON.parse(JSON.stringify(response.data.genres));
+      jsonObject.forEach(e => {
 
-        }).catch(err => {
-          console.log('Error has occured ' + err);
-        });
+        const genreObject = new Genre(e.id, e.name);
+        this.genreArray.push(genreObject);
 
+      });
 
-
-
-
-        //now get movies
-        axios.get('https://api.themoviedb.org/3/discover/movie', {
-          params: {
-            api_key: '7d46a1e2eaad722e50de334a6895d840',
-            language: 'en-US',
-            sort_by: 'popularity.desc',
-            page: '1',
-            include_adult: 'false',
-            include_video: 'false'
-          }
-        }).then(response => {
-
-          const jsonObject = JSON.parse(JSON.stringify(response.data.results));
-          jsonObject.forEach(e => {
-            const movieObject = new Movies(e.id, e.title, e.release_date, e.vote_average,
-              this.getPostPath(e.poster_path), false, e.original_language, e.vote_count, e.genre_ids, this.genreArray, false);
-            this.todoArray.push(movieObject);
-          });
-
-        }).catch(err => {
-          console.log('Error has occured ' + err);
-        });
+    }).catch(err => {
+      console.log('Error has occured ' + err);
+    });
 
 
 
 
 
+    //now get movies
+    axios.get('https://api.themoviedb.org/3/discover/movie', {
+      params: {
+        api_key: '7d46a1e2eaad722e50de334a6895d840',
+        language: 'en-US',
+        sort_by: 'popularity.desc',
+        page: '1',
+        include_adult: 'false',
+        include_video: 'false'
+      }
+    }).then(response => {
 
-    //now get genres:
-    // axios.get('https://api.themoviedb.org/3/genre/movie/list', {
-    //   params: {
-    //     api_key: '7d46a1e2eaad722e50de334a6895d840',
-    //     language: 'en-US'
-    //   }
-    // }).then(response => {
-    //   const jsonObject = JSON.parse(JSON.stringify(response.data.results));
-    //   jsonObject.forEach(e => {
-    //     const genreObject = new Genre(e.id, e.name);
-    //     this.genreArray.push(genreObject);
-    //     //}).then(response => {
+      const jsonObject = JSON.parse(JSON.stringify(response.data.results));
+      jsonObject.forEach(e => {
+        const movieObject = new Movies(e.id, e.title, e.release_date, e.vote_average,
+          this.getPostPath(e.poster_path), false, e.original_language, e.vote_count, e.genre_ids, this.genreArray, false);
+        this.todoArray.push(movieObject);
+      });
 
-    //     //now get movies
-    //     axios.get('https://api.themoviedb.org/3/discover/movie', {
-    //       params: {
-    //         api_key: '7d46a1e2eaad722e50de334a6895d840',
-    //         language: 'en-US',
-    //         sort_by: 'popularity.desc',
-    //         page: '1',
-    //         include_adult: 'false',
-    //         include_video: 'false'
-    //       }
-    //     }).then(response => {
-
-    //       const jsonObject = JSON.parse(JSON.stringify(response.data.results));
-    //       jsonObject.forEach(e => {
-    //         const movieObject = new Movies(e.id, e.title, e.release_date, e.vote_average,
-    //           this.getPostPath(e.poster_path), false, e.original_language, e.vote_count, e.genre_ids, this.genreArray);
-    //         this.todoArray.push(movieObject);
-    //       });
-
-    //     }).catch(err => {
-    //       console.log('Error has occured ' + err);
-    //     });
-    //   });
-    // }).catch(err => {
-    //   console.log('Error has occured ' + err);
-    // });
+    }).catch(err => {
+      console.log('Error has occured ' + err);
+    });
 
   }
 
@@ -203,6 +160,13 @@ export class AppComponent {
     if (!duplicate) {
       this.favArray.push(valueToStore);
       sessionStorage.setItem('userFavourites', this.favArray.toString());
+      this.toastr.success('Favourite Added', valueToStoreJSONObject.title.toString() + ', has been added to your Favourite.',
+        { timeOut: 2000 });
+    }
+    else {
+      this.toastr.error('Favourite Duplicate', valueToStoreJSONObject.title.toString() + ', has alread been added to your Favourite.', {
+        timeOut: 3000
+      });
     }
   }
 
